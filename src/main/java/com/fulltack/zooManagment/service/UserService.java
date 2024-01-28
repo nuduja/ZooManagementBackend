@@ -1,5 +1,6 @@
 package com.fulltack.zooManagment.service;
 
+import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,19 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers(){
-        return repository.findAll();
+        try {
+            return repository.findAll();
+        } catch (Exception e) {
+            throw new ServiceException("Error occurred while fetching users", e);
+        }
     }
 
     public  User addUser(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+        try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return repository.save(user);
+        } catch (Exception e) {
+            throw new ServiceException("Error occurred while adding a user", e);
+        }
     }
 }

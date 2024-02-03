@@ -33,4 +33,10 @@ public class UserService {
             throw new ServiceException("Error occurred while adding a user", e);
         }
     }
+
+    public boolean login(String username, String password){
+        User user = repository.findByUsername(username);
+        boolean a = passwordEncoder.matches(password, user.getPassword());
+        return user != null && a;
+    }
 }

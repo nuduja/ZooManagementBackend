@@ -23,12 +23,17 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@RequestBody User user){
+    public String addUser(@RequestBody User user){
         return service.addUser(user);
     }
 
     @PostMapping("/login")
     public boolean login(@RequestBody LoginDTO loginDTO){
         return service.login(loginDTO.getUsername(), loginDTO.getPassword());
+    }
+
+    @PutMapping
+    public String updateUser(@RequestBody User user){
+        return service.updateUser(user);
     }
 }

@@ -25,6 +25,14 @@ public class UserService {
         }
     }
 
+    public User getUser(String username){
+        try{
+            return repository.findByUsername(username);
+        } catch (Exception e){
+            throw new ServiceException("Error occurred while fetching specific user", e);
+        }
+    }
+
     public  String addUser(User user){
         try {
             if(!repository.existsByUsername(user.getUsername().trim())) {
@@ -63,13 +71,36 @@ public class UserService {
                 return "User " + userRequest.getUsername() + " Does not Exist";
             }
         } catch (Exception e){
-            throw new ServiceException("Error occurred white updating a user", e);
+            throw new ServiceException("Error occurred while updating a user", e);
         }
     }
 
     public boolean login(String username, String password){
-        User user = repository.findByUsername(username);
-        boolean a = passwordEncoder.matches(password, user.getPassword());
-        return user != null && a;
+        try {
+            if(repository.existsByUsername(username)) {
+                User user = repository.findByUsername(username);
+                boolean a = passwordEncoder.matches(password, user.getPassword());
+                return user != null && a;
+            }
+            else{
+                return false;
+            }
+        } catch(Exception e){
+            throw new ServiceException("Error occurred while login", e);
+        }
+    }
+
+    public String deleteUser(String username){
+        try {
+            if(repository.existsByUsername(username)) {
+                repository.deleteByUsername(username);
+                return username + " User Deleted Successfully";
+            }
+            else{
+                return username + " User Does not exists";
+            }
+        } catch (Exception e){
+            throw new ServiceException("Error Occurred while Deleting User", e);
+        }
     }
 }

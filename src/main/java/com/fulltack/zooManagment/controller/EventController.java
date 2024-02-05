@@ -1,0 +1,29 @@
+package com.fulltack.zooManagment.controller;
+
+import com.fulltack.zooManagment.model.Event;
+import com.fulltack.zooManagment.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/event")
+public class EventController {
+
+    @Autowired
+    private EventService service;
+
+    @GetMapping
+    public List<Event> getAllEvents() {
+        return service.getAllEvents();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Event addEvent(@RequestBody Event event) {
+        return service.addEvent(event);
+    }
+}
+

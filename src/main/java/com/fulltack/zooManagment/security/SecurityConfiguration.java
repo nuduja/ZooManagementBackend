@@ -20,6 +20,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/user")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/event/**")).permitAll()
                         .anyRequest().authenticated())
                 .httpBasic();
         return http.build();

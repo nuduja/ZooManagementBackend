@@ -21,6 +21,11 @@ public class UserController {
         return service.getAllUsers();
     }
 
+    @GetMapping("/{username}")
+    public User getUser(@PathVariable String username){
+        return service.getUser(username);
+    }
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public String addUser(@RequestBody User user){
@@ -35,5 +40,10 @@ public class UserController {
     @PutMapping
     public String updateUser(@RequestBody User user){
         return service.updateUser(user);
+    }
+
+    @DeleteMapping("/{username}")
+    public String deleteUser(@PathVariable String username){
+        return service.deleteUser(username);
     }
 }

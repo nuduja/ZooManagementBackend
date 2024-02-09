@@ -19,6 +19,7 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/ticket/**")).permitAll()
                         .anyRequest().authenticated())
                 .httpBasic();
         return http.build();

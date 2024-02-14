@@ -27,17 +27,17 @@ public class EventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Event addEvent(@RequestBody Event event) {
+    public String addEvent(@RequestBody Event event) {
         return service.addEvent(event);
     }
 
     @DeleteMapping("/{eventID}")
     public String deleteEvent(@PathVariable String eventID){
-        return service.deleteEvent(eventID);
+        return service.deleteEventByEventID(eventID);
     }
 
     @PutMapping
-    public Event updateEvent(@RequestBody Event event){
+    public String updateEvent(@RequestBody Event event){
         return service.updateEvent(event);
     }
 }

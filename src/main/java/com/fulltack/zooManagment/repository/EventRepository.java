@@ -9,6 +9,8 @@ public interface EventRepository extends MongoRepository<Event, String> {
 
         @Query("{EventID:  ?0}")
         Event getEventByEventID(String EventID);
+
+    boolean existsByEventID(String EventID);
     }
 
 

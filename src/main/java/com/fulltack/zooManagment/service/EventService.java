@@ -13,13 +13,31 @@ public class EventService {
     @Autowired
     private EventRepository repository;
 
-    public List<Event> getAllEvents() {
-        return repository.findAll();
-    }
+    public List<Event> getAllEvents(){return repository.findAll();}
 
+    public Event getEventByEventID(String eventID){return repository.getEventByEventID(eventID);}
 
-    public Event addEvent(Event event) {
+    public Event addEvent(Event event){
         event.setEventID((UUID.randomUUID().toString().split("-")[0]));
         return repository.save(event);
     }
+
+    //TODO: Error
+    public String deleteEvent(String id){
+        repository.deleteById(id);
+        return id + " Deleted Successfully";
+    }
+
+    public Event updateEvent(Event eventRequest){
+        Event existingEvent = repository.findById(eventRequest.getId()).get();
+        existingEvent.setEventName(eventRequest.getEventName());
+        existingEvent.setEventDescription(eventRequest.getEventDescription());
+        existingEvent.setEventLocation(eventRequest.getEventLocation());
+        existingEvent.setCapacity(eventRequest.getCapacity());
+
+        return repository.save(existingEvent);
+    }
+
+
+
 }

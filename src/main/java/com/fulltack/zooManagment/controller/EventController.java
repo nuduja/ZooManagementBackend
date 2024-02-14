@@ -20,10 +20,25 @@ public class EventController {
         return service.getAllEvents();
     }
 
+    @GetMapping("/{eventID}")
+    public Event getEvent(@PathVariable String eventID){
+        return service.getEventByEventID(eventID);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Event addEvent(@RequestBody Event event) {
         return service.addEvent(event);
+    }
+
+    @DeleteMapping("/{eventID}")
+    public String deleteEvent(@PathVariable String eventID){
+        return service.deleteEvent(eventID);
+    }
+
+    @PutMapping
+    public Event updateEvent(@RequestBody Event event){
+        return service.updateEvent(event);
     }
 }
 

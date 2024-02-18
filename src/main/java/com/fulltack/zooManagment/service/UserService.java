@@ -50,6 +50,7 @@ public class UserService {
     }
 
     //TODO: Not Updating
+    //TODO: Remove Password updaing in update profile and introduce another
     public String updateUser(User userRequest){
         try {
             if (repository.existsByUsername(userRequest.getUsername())) {

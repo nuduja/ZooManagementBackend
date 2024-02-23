@@ -35,11 +35,12 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/generateToken")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/ticket/**")).permitAll()
@@ -51,7 +52,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

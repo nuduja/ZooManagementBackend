@@ -1,4 +1,6 @@
 spring :
+  main:
+    allow-circular-references: true
   data :
     mongodb :
       uri : mongodb+srv://slmun:slmun@cluster0.h0qecvi.mongodb.net/

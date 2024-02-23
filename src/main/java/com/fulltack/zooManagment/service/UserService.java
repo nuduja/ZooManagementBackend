@@ -4,11 +4,11 @@ import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Primary
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
@@ -25,7 +26,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<User>> getAllUsers() {
         try {
             return ResponseEntity.ok(repository.findAll());
         } catch (Exception e) {
@@ -34,33 +35,32 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public ResponseEntity<User> getUser(String username){
-        try{
+    public ResponseEntity<User> getUser(String username) {
+        try {
             return ResponseEntity.ok(repository.findByUsername(username));
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error occurred while fetching specific user", e);
         }
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        try{
+        try {
             User userDetail = repository.findByUsername(username);
             return userDetail;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error occurred while fetching specific user", e);
         }
     }
 
 
-    public  ResponseEntity<String> addUser(User user){
+    public ResponseEntity<String> addUser(User user) {
         try {
-            if(!repository.existsByUsername(user.getUsername().trim())) {
+            if (!repository.existsByUsername(user.getUsername().trim())) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 repository.save(user);
                 return ResponseEntity.status(HttpStatus.CREATED).body("User " + user.getUsername() + " Saved Successfully");
-            }
-            else {
+            } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Username " + user.getUsername() + " Already Exists");
             }
 
@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService {
     //TODO: Not Updating
     //TODO: Remove Password updaing in update profile and introduce another
     @Transactional
-    public String updateUser(User userRequest){
+    public String updateUser(User userRequest) {
         try {
 //            if (repository.existsByUsername(userRequest.getUsername())) {
 //                User existingUser = repository.findByUsername(userRequest.getUsername());
@@ -104,36 +104,34 @@ public class UserService implements UserDetailsService {
             } else {
                 return "User " + userRequest.getUsername() + " Does not Exist";
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error occurred while updating a user", e);
         }
     }
 
-    public boolean login(String username, String password){
+    public boolean login(String username, String password) {
         try {
-            if(repository.existsByUsername(username)) {
+            if (repository.existsByUsername(username)) {
                 User user = repository.findByUsername(username);
                 boolean a = passwordEncoder.matches(password, user.getPassword());
                 return user != null && a;
-            }
-            else{
+            } else {
                 return false;
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error occurred while login", e);
         }
     }
 
-    public ResponseEntity<String> deleteUser(String username){
+    public ResponseEntity<String> deleteUser(String username) {
         try {
-            if(repository.existsByUsername(username)) {
+            if (repository.existsByUsername(username)) {
                 repository.deleteByUsername(username);
                 return ResponseEntity.ok(username + " User Deleted Successfully");
-            }
-            else{
+            } else {
                 return ResponseEntity.ok(username + " User Does not exists");
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error Occurred while Deleting User", e);
         }
     }

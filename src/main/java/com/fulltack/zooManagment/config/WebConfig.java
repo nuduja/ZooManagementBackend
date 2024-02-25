@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
-                .allowedOrigins("http://127.0.0.1:5173","http://127.0.0.1:5174", "https://zoo-management-frontend-customer.vercel.app/")
+                .allowedOrigins("http://127.0.0.1:5173","http://127.0.0.1:5174","http://localhost:5173","http://localhost:5174", "https://zoo-management-frontend-customer.vercel.app/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true)
                 .allowedHeaders("*")

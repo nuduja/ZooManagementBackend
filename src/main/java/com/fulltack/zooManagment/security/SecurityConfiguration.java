@@ -41,6 +41,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/animal/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/animalspecies/**")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/generateToken")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/ticket/**")).permitAll()

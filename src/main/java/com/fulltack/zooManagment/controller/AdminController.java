@@ -51,6 +51,11 @@ public class AdminController {
         return service.addAdmin(admin);
     }
 
+    @PostMapping("/login")
+    public boolean login(@RequestBody LoginDTO loginDTO){
+        return service.login(loginDTO.getUsername(), loginDTO.getPassword());
+    }
+
     @PostMapping("/generateToken")
     public ResponseEntity<String> authenticateAndGetToken(@RequestBody LoginDTO loginDTO) {
 //    public ResponseEntity<Map<String, String>> authenticateAndGetToken(@RequestBody LoginDTO loginDTO) {

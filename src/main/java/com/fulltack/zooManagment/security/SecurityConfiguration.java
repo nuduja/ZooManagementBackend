@@ -39,13 +39,16 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/event/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/animal/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/animalspecies/**")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/generateToken")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/ticket/**")).permitAll()
+
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

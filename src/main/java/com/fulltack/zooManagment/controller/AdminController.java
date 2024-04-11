@@ -1,60 +1,56 @@
 package com.fulltack.zooManagment.controller;
 
 import com.fulltack.zooManagment.auth.JwtService;
+import com.fulltack.zooManagment.model.Admin;
 import com.fulltack.zooManagment.model.LoginDTO;
-import com.fulltack.zooManagment.model.User;
-import com.fulltack.zooManagment.service.UserService;
+import com.fulltack.zooManagment.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/admin")
+public class AdminController {
 
     @Autowired
-    private UserService service;
+    private AdminService service;
 
     private final JwtService jwtService;
+
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserController(UserService service,
-                          JwtService jwtService,
-                          AuthenticationManager authenticationManager) {
+    public AdminController(AdminService service,
+                           JwtService jwtService,
+                           AuthenticationManager authenticationManager) {
         this.service = service;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
-        return service.getAllUsers();
+    public ResponseEntity<List<Admin>> getAllAdmins() {
+        return service.getAllAdmins();
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<User> getUser(@PathVariable String username){
-        return service.getUser(username);
+    public ResponseEntity<Admin> getUser(@PathVariable String username) {
+        return service.getAdmin(username);
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addUser(@RequestBody User user){
-        return service.addUser(user);
+    public ResponseEntity<String> addAdmin(@RequestBody Admin admin) {
+        return service.addAdmin(admin);
     }
 
-    //API Call not in use
     @PostMapping("/login")
     public boolean login(@RequestBody LoginDTO loginDTO){
         return service.login(loginDTO.getUsername(), loginDTO.getPassword());
@@ -70,18 +66,12 @@ public class UserController {
 //            return ResponseEntity.ok(response);
             return ResponseEntity.ok(jwtService.generateToken(loginDTO.getUsername()));
         } else {
-            throw new UsernameNotFoundException("invalid user request !");
+            throw new UsernameNotFoundException("invalid admin request !");
         }
     }
 
-
-    @PutMapping
-    public String updateUser(@RequestBody User user){
-        return service.updateUser(user);
-    }
-
     @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUser(@PathVariable String username){
-        return service.deleteUser(username);
+    public ResponseEntity<String> deleteAdmin(@PathVariable String username) {
+        return service.deleteAdmin(username);
     }
 }

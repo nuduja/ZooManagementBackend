@@ -13,7 +13,6 @@ public class Animal {
     private String id;
     private String animalSpecificId;
     private String animalSpeciesName;
-    private String animalSpeciesId;
     private String name;
     private String enclosureId;
     private String age;

@@ -1,8 +1,15 @@
 package com.fulltack.zooManagment.controller;
 
+import com.fulltack.zooManagment.Requests.AdminRequest;
 import com.fulltack.zooManagment.auth.JwtService;
+import com.fulltack.zooManagment.enums.TicketStatus;
+import com.fulltack.zooManagment.enums.TicketType;
+import com.fulltack.zooManagment.exception.AdminNotFoundException;
+import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.exception.TicketNotFoundException;
 import com.fulltack.zooManagment.model.Admin;
 import com.fulltack.zooManagment.model.LoginDTO;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/v1/admin")
 public class AdminController {
 
     @Autowired
@@ -37,23 +44,37 @@ public class AdminController {
 
     @GetMapping
     public ResponseEntity<List<Admin>> getAllAdmins() {
-        return service.getAllAdmins();
+        return ResponseEntity.ok(service.getAllAdmins());
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<Admin> getUser(@PathVariable String username) {
-        return service.getAdmin(username);
+    public ResponseEntity<Admin> getAdminByUsername(@PathVariable String username) {
+        try {
+            return ResponseEntity.ok(service.getAdminByUsername(username));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } catch (AdminNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addAdmin(@RequestBody Admin admin) {
-        return service.addAdmin(admin);
+    public ResponseEntity<String> addAdmin(@RequestBody AdminRequest adminRequest) {
+        try {
+            return ResponseEntity.ok(service.addAdmin(adminRequest));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody LoginDTO loginDTO){
-        return service.login(loginDTO.getUsername(), loginDTO.getPassword());
+    public ResponseEntity<Boolean> login(@RequestBody LoginDTO loginDTO){
+        try {
+            return ResponseEntity.ok(service.login(loginDTO.getUsername(), loginDTO.getPassword()));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PostMapping("/generateToken")
@@ -72,6 +93,22 @@ public class AdminController {
 
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteAdmin(@PathVariable String username) {
-        return service.deleteAdmin(username);
+        try {
+            return ResponseEntity.ok(service.deleteAdmin(username));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/searchAdmin")
+    public ResponseEntity<List<Admin>> searchTickets(
+            @RequestParam(required = false) String adminId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String username) {
+        try {
+            return ResponseEntity.ok(service.searchAdmins(adminId, name, username));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

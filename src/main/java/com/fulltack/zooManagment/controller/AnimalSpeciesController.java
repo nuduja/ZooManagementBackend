@@ -4,17 +4,12 @@ import com.fulltack.zooManagment.Requests.AnimalSpeciesRequest;
 import com.fulltack.zooManagment.exception.AnimalNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.AnimalSpecies;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.service.AnimalSpeciesServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

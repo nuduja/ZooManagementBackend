@@ -2,14 +2,10 @@ package com.fulltack.zooManagment.controller;
 
 import com.fulltack.zooManagment.Requests.AdminRequest;
 import com.fulltack.zooManagment.auth.JwtService;
-import com.fulltack.zooManagment.enums.TicketStatus;
-import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.exception.AdminNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
-import com.fulltack.zooManagment.exception.TicketNotFoundException;
 import com.fulltack.zooManagment.model.Admin;
 import com.fulltack.zooManagment.model.LoginDTO;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,7 +65,7 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<Boolean> login(@RequestBody LoginDTO loginDTO) {
         try {
             return ResponseEntity.ok(service.login(loginDTO.getUsername(), loginDTO.getPassword()));
         } catch (ServiceException e) {

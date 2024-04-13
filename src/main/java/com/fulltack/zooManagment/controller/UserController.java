@@ -3,26 +3,20 @@ package com.fulltack.zooManagment.controller;
 import com.fulltack.zooManagment.Requests.UserRequest;
 import com.fulltack.zooManagment.auth.JwtService;
 import com.fulltack.zooManagment.exception.ServiceException;
-import com.fulltack.zooManagment.exception.TicketNotFoundException;
 import com.fulltack.zooManagment.exception.UserNotFoundException;
-import com.fulltack.zooManagment.model.Admin;
 import com.fulltack.zooManagment.model.LoginDTO;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -44,12 +38,12 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(service.getAllUsers());
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username){
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         try {
             return ResponseEntity.ok(service.getUserByUsername(username));
         } catch (ServiceException e) {
@@ -61,7 +55,7 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> addUser(@RequestBody UserRequest userRequest){
+    public ResponseEntity<User> addUser(@RequestBody UserRequest userRequest) {
         try {
             return ResponseEntity.ok(service.addUser(userRequest));
         } catch (ServiceException e) {
@@ -71,7 +65,7 @@ public class UserController {
 
     //API Call not in use
     @PostMapping("/login")
-    public boolean login(@RequestBody LoginDTO loginDTO){
+    public boolean login(@RequestBody LoginDTO loginDTO) {
         return service.login(loginDTO.getUsername(), loginDTO.getPassword());
     }
 
@@ -91,12 +85,12 @@ public class UserController {
 
 
     @PutMapping
-    public String updateUser(@RequestBody User user){
+    public String updateUser(@RequestBody User user) {
         return service.updateUser(user);
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username){
+    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
         try {
             return ResponseEntity.ok(service.deleteUserByUsername(username));
         } catch (ServiceException e) {

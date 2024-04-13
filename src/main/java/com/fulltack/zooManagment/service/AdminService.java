@@ -125,7 +125,7 @@ public class AdminService {
             }
 
             return mongoTemplate.find(query, Admin.class);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error Searching Ticket", e);
         }
     }

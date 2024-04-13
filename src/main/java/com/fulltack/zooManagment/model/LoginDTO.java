@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 public class LoginDTO {
-//public class LoginDTO implements UserDetails {
+    //public class LoginDTO implements UserDetails {
     private String username;
     private String password;
 

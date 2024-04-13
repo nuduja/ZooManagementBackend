@@ -1,13 +1,8 @@
 package com.fulltack.zooManagment.service;
 
-import com.fulltack.zooManagment.Requests.TicketRequest;
 import com.fulltack.zooManagment.Requests.UserRequest;
-import com.fulltack.zooManagment.enums.TicketStatus;
-import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.exception.ServiceException;
-import com.fulltack.zooManagment.exception.TicketNotFoundException;
 import com.fulltack.zooManagment.exception.UserNotFoundException;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +10,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;

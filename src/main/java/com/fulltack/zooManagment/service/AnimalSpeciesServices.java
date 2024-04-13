@@ -1,19 +1,13 @@
 package com.fulltack.zooManagment.service;
 
-import com.fulltack.zooManagment.Requests.AnimalRequest;
 import com.fulltack.zooManagment.Requests.AnimalSpeciesRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
-import com.fulltack.zooManagment.model.Animal;
 import com.fulltack.zooManagment.model.AnimalSpecies;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AnimalSpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

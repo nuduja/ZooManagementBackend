@@ -1,21 +1,14 @@
 package com.fulltack.zooManagment.service;
 
 import com.fulltack.zooManagment.Requests.AdminRequest;
-import com.fulltack.zooManagment.Requests.TicketRequest;
-import com.fulltack.zooManagment.enums.TicketStatus;
-import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.exception.AdminNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
-import com.fulltack.zooManagment.exception.TicketNotFoundException;
 import com.fulltack.zooManagment.model.Admin;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

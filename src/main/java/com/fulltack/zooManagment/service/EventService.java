@@ -3,7 +3,6 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.Event;
 import com.fulltack.zooManagment.repository.EventRepository;
-import com.sun.java.accessibility.util.EventID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

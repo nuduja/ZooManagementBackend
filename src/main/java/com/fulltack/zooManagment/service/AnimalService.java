@@ -4,7 +4,6 @@ import com.fulltack.zooManagment.Requests.AnimalRequest;
 import com.fulltack.zooManagment.exception.AnimalNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.Animal;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;

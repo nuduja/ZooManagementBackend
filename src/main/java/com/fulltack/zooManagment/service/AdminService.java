@@ -1,9 +1,19 @@
 package com.fulltack.zooManagment.service;
 
+import com.fulltack.zooManagment.Requests.AdminRequest;
+import com.fulltack.zooManagment.Requests.TicketRequest;
+import com.fulltack.zooManagment.enums.TicketStatus;
+import com.fulltack.zooManagment.enums.TicketType;
+import com.fulltack.zooManagment.exception.AdminNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.exception.TicketNotFoundException;
 import com.fulltack.zooManagment.model.Admin;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AdminService {
@@ -21,31 +32,52 @@ public class AdminService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<List<Admin>> getAllAdmins() {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    public Admin convertToAdmin(AdminRequest adminRequest) {
+        Admin admin = new Admin();
+        admin.setAdminId(UUID.randomUUID().toString().split("-")[0]);
+        admin.setName(adminRequest.getName());
+        admin.setUsername(adminRequest.getUsername());
+        admin.setPassword(adminRequest.getPassword());
+        admin.setRole(adminRequest.getRole());
+        return admin;
+    }
+
+    public List<Admin> getAllAdmins() {
         try {
-            return ResponseEntity.ok(repository.findAll());
+            return repository.findAll();
         } catch (Exception e) {
-            System.out.println("Error occurred while fetching admins" + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
+            throw new ServiceException("Error Occurred while fetching all Tickets", e);
         }
     }
 
-    public ResponseEntity<Admin> getAdmin(String username) {
+    public Admin getAdminByUsername(String username) {
         try {
-            return ResponseEntity.ok(repository.findByUsername(username));
+            Admin admin = repository.findByUsername(username);
+
+            if (admin == null) {
+                throw new AdminNotFoundException("Ticket with ID " + username + " not found");
+            }
+            return admin;
         } catch (Exception e) {
-            throw new ServiceException("Error occurred while fetching specific user", e);
+            throw new ServiceException("Error occurred while fetching specific Admin", e);
         }
     }
 
-    public ResponseEntity<String> addAdmin(Admin admin) {
+    public String addAdmin(AdminRequest adminRequest) {
         try {
+            Admin admin = convertToAdmin(adminRequest);
+            if (admin.getUsername() == null || admin.getPassword() == null) {
+                throw new IllegalArgumentException("Admin username and password must be valid.");
+            }
             if (!repository.existsByUsername(admin.getUsername().trim())) {
                 admin.setPassword(passwordEncoder.encode(admin.getPassword()));
                 repository.save(admin);
-                return ResponseEntity.status(HttpStatus.CREATED).body("User " + admin.getUsername() + " Saved Successfully");
+                return "Admin Created Successful";
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Username " + admin.getUsername() + " Already Exists");
+                return "Admin User already exists";
             }
 
         } catch (Exception e) {
@@ -67,16 +99,41 @@ public class AdminService {
         }
     }
 
-    public ResponseEntity<String> deleteAdmin(String username) {
+    public String deleteAdmin(String username) {
         try {
             if (repository.existsByUsername(username)) {
                 repository.deleteByUsername(username);
-                return ResponseEntity.ok(username + " Admin " + username + " Deleted Successfully");
+                return "Admin Deleted Successfully";
             } else {
-                return ResponseEntity.ok(username + " Admin " + username + " Does not exists");
+                return "Admin doesn't exists";
             }
         } catch (Exception e) {
-            throw new ServiceException("Error Occurred while Deleting User", e);
+            throw new ServiceException("Error Occurred while Deleting Admin User", e);
+        }
+    }
+
+    public List<Admin> searchAdmins(String adminId, String name, String username) {
+        try {
+            Query query = new Query();
+            List<Criteria> criteria = new ArrayList<>();
+
+            if (adminId != null && !adminId.isEmpty()) {
+                criteria.add(Criteria.where("adminId").regex(adminId, "i")); // case-insensitive search
+            }
+            if (name != null && !name.isEmpty()) {
+                criteria.add(Criteria.where("name").is(name));
+            }
+            if (username != null && !username.isEmpty()) {
+                criteria.add(Criteria.where("username").is(username));
+            }
+
+            if (!criteria.isEmpty()) {
+                query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
+            }
+
+            return mongoTemplate.find(query, Admin.class);
+        } catch(Exception e){
+            throw new ServiceException("Error Searching Ticket", e);
         }
     }
 }

@@ -1,19 +1,15 @@
-package com.fulltack.zooManagment.model;
+package com.fulltack.zooManagment.Requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.jetbrains.annotations.NotNull;
 
-@Document(collection = "animalsSpecies")
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class AnimalSpecies {
-    @Id
-    private String id;
-    private String animalSpeciesId;
+public class AnimalSpeciesRequest {
+    @NotNull
     private String animalSpeciesName;
     private String taxonomy_kingdom;
     private String taxonomy_scientific_name;

@@ -1,9 +1,16 @@
 package com.fulltack.zooManagment.service;
 
+import com.fulltack.zooManagment.Requests.AnimalRequest;
+import com.fulltack.zooManagment.Requests.AnimalSpeciesRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.model.Animal;
 import com.fulltack.zooManagment.model.AnimalSpecies;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AnimalSpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AnimalSpeciesServices {
@@ -18,49 +26,88 @@ public class AnimalSpeciesServices {
     private AnimalSpeciesRepository repository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private MongoTemplate mongoTemplate;
 
-    public ResponseEntity<List<AnimalSpecies>> getAllAnimalSpecies() {
+    public AnimalSpecies convertToAnimalSpecies(AnimalSpeciesRequest animalSpeciesRequest) {
+        AnimalSpecies animalSpecies = new AnimalSpecies();
+        animalSpecies.setAnimalSpeciesId(UUID.randomUUID().toString().split("-")[0]);
+        animalSpecies.setAnimalSpeciesName(animalSpeciesRequest.getAnimalSpeciesName());
+        animalSpecies.setTaxonomy_kingdom(animalSpeciesRequest.getTaxonomy_kingdom());
+        animalSpecies.setTaxonomy_scientific_name(animalSpeciesRequest.getTaxonomy_scientific_name());
+        animalSpecies.setCharacteristics_group_behavior(animalSpeciesRequest.getCharacteristics_group_behavior());
+        animalSpecies.setCharacteristics_diet(animalSpeciesRequest.getCharacteristics_diet());
+        animalSpecies.setCharacteristics_skin_type(animalSpeciesRequest.getCharacteristics_skin_type());
+        animalSpecies.setCharacteristics_top_speed(animalSpeciesRequest.getCharacteristics_top_speed());
+        animalSpecies.setCharacteristics_lifespan(animalSpeciesRequest.getCharacteristics_lifespan());
+        animalSpecies.setCharacteristics_weight(animalSpeciesRequest.getCharacteristics_weight());
+        return animalSpecies;
+    }
+
+    public List<AnimalSpecies> getAllAnimalSpecies() {
         try {
-            return ResponseEntity.ok(repository.findAll());
+            return repository.findAll();
         } catch (Exception e) {
-            System.out.println("Error occurred while fetching AnimalSpecies" + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
+            throw new ServiceException("Error Occurred while fetching all Tickets", e);
         }
     }
 
-    public ResponseEntity<AnimalSpecies> getAnimalSpecies(String name) {
+    public AnimalSpecies getAnimalSpecies(String name) {
         try {
-            return ResponseEntity.ok(repository.findByName(name));
+            return repository.findByAnimalSpeciesName(name);
         } catch (Exception e) {
             throw new ServiceException("Error occurred while fetching specific user", e);
         }
     }
 
-    public ResponseEntity<String> addAnimalSpecies(AnimalSpecies animalSpecies) {
+    public String addAnimalSpecies(AnimalSpeciesRequest animalSpeciesRequest) {
         try {
-            if (!repository.existsByName(animalSpecies.getName().trim())) {
+            AnimalSpecies animalSpecies = convertToAnimalSpecies(animalSpeciesRequest);
+            if (!repository.existsByAnimalSpeciesName(animalSpecies.getAnimalSpeciesId().trim())) {
+                if (animalSpecies.getAnimalSpeciesId() == null || animalSpecies.getAnimalSpeciesName() == null) {
+                    throw new IllegalArgumentException("Animal Species ID and Name must be valid.");
+                }
                 repository.save(animalSpecies);
-                return ResponseEntity.status(HttpStatus.CREATED).body("User " + animalSpecies.getName() + " Saved Successfully");
+                return "User " + animalSpecies.getAnimalSpeciesName() + " Saved Successfully";
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Username " + animalSpecies.getName() + " Already Exists");
+                return "Username " + animalSpecies.getAnimalSpeciesName() + " Already Exists";
             }
-
         } catch (Exception e) {
             throw new ServiceException("Error occurred while adding an animalSpecies", e);
         }
     }
 
-    public ResponseEntity<String> deleteAnimalSpecies(String name) {
+    public String deleteAnimalSpecies(String name) {
         try {
-            if (repository.existsByName(name)) {
-                repository.deleteByName(name);
-                return ResponseEntity.ok(name + " AnimalSpecies Deleted Successfully");
+            if (repository.existsByAnimalSpeciesName(name)) {
+                repository.deleteByAnimalSpeciesName(name);
+                return "AnimalSpecies Deleted Successfully";
             } else {
-                return ResponseEntity.ok(name + " AnimalSpecies Does not exists");
+                return "AnimalSpecies Does not exists";
             }
         } catch (Exception e) {
             throw new ServiceException("Error Occurred while Deleting AnimalSpecies", e);
+        }
+    }
+
+    public List<Ticket> searchAnimalSpecies(String animalSpeciesId, String animalSpciesName) {
+        try {
+            Query query = new Query();
+            List<Criteria> criteria = new ArrayList<>();
+
+            if (animalSpeciesId != null && !animalSpeciesId.isEmpty()) {
+                criteria.add(Criteria.where("animalSpeciesId").regex(animalSpeciesId, "i")); // case-insensitive search
+            }
+            if (animalSpciesName != null) {
+                criteria.add(Criteria.where("animalSpciesName").is(animalSpciesName));
+            }
+
+            if (!criteria.isEmpty()) {
+                query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
+            }
+
+            return mongoTemplate.find(query, Ticket.class);
+        } catch(Exception e){
+            throw new ServiceException("Error Searching Animal Species", e);
         }
     }
 }

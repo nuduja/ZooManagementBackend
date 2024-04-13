@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                         .requestMatchers(new AntPathRequestMatcher("/animalspecies/**")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/generateToken")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/ticket/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/ticket/**")).permitAll()
 
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

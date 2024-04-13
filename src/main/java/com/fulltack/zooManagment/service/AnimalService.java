@@ -112,7 +112,7 @@ public class AnimalService {
         }
     }
 
-    public List<Ticket> searchAnimals(String animalId, String animalSpeciesId, String name) {
+    public List<Animal> searchAnimals(String animalId, String animalSpeciesId, String name) {
         try {
             Query query = new Query();
             List<Criteria> criteria = new ArrayList<>();
@@ -120,10 +120,10 @@ public class AnimalService {
             if (animalId != null && !animalId.isEmpty()) {
                 criteria.add(Criteria.where("animalId").regex(animalId, "i")); // case-insensitive search
             }
-            if (animalSpeciesId != null) {
+            if (animalSpeciesId != null && !animalSpeciesId.isEmpty()) {
                 criteria.add(Criteria.where("animalId").is(animalId));
             }
-            if (name != null) {
+            if (name != null && !name.isEmpty()) {
                 criteria.add(Criteria.where("name").is(name));
             }
 
@@ -131,7 +131,7 @@ public class AnimalService {
                 query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
             }
 
-            return mongoTemplate.find(query, Ticket.class);
+            return mongoTemplate.find(query, Animal.class);
         } catch(Exception e){
             throw new ServiceException("Error Searching Animal", e);
         }

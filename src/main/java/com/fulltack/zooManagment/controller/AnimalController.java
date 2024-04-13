@@ -82,8 +82,8 @@ public class AnimalController {
         }
     }
 
-    @GetMapping("/search")
-    public List<Ticket> searchTickets(
+    @GetMapping("/searchAnimal")
+    public List<Animal> searchTickets(
             @RequestParam(required = false) String animalId,
             @RequestParam(required = false) String animalSpeciesId,
             @RequestParam(required = false) String name) {

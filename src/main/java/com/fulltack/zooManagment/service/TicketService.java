@@ -31,6 +31,7 @@ public class TicketService {
         ticket.setTicketType(ticketRequest.getTicketType());
         ticket.setStatus(TicketStatus.VALID);
         ticket.setPrice(ticketRequest.getPrice());
+        ticket.setTicketDate(ticketRequest.getTicketDate());
         ticket.setUsername(ticketRequest.getUsername());
         return ticket;
     }

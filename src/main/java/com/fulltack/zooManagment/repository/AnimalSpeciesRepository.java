@@ -4,9 +4,9 @@ import com.fulltack.zooManagment.model.AnimalSpecies;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface AnimalSpeciesRepository extends MongoRepository<AnimalSpecies, String> {
-    AnimalSpecies findByName(String name);
+    AnimalSpecies findByAnimalSpeciesName(String name);
 
-    boolean existsByName(String name);
+    boolean existsByAnimalSpeciesName(String name);
 
-    String deleteByName(String name);
+    String deleteByAnimalSpeciesName(String name);
 }

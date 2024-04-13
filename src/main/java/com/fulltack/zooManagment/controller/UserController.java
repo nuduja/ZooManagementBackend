@@ -1,6 +1,11 @@
 package com.fulltack.zooManagment.controller;
 
+import com.fulltack.zooManagment.Requests.UserRequest;
 import com.fulltack.zooManagment.auth.JwtService;
+import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.exception.TicketNotFoundException;
+import com.fulltack.zooManagment.exception.UserNotFoundException;
+import com.fulltack.zooManagment.model.Admin;
 import com.fulltack.zooManagment.model.LoginDTO;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.service.UserService;
@@ -20,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -40,18 +45,28 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(){
-        return service.getAllUsers();
+        return ResponseEntity.ok(service.getAllUsers());
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<User> getUser(@PathVariable String username){
-        return service.getUser(username);
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username){
+        try {
+            return ResponseEntity.ok(service.getUserByUsername(username));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addUser(@RequestBody User user){
-        return service.addUser(user);
+    public ResponseEntity<User> addUser(@RequestBody UserRequest userRequest){
+        try {
+            return ResponseEntity.ok(service.addUser(userRequest));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     //API Call not in use
@@ -81,7 +96,23 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUser(@PathVariable String username){
-        return service.deleteUser(username);
+    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username){
+        try {
+            return ResponseEntity.ok(service.deleteUserByUsername(username));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/searchUser")
+    public ResponseEntity<List<User>> searchTickets(
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String username) {
+        try {
+            return ResponseEntity.ok(service.searchUser(userId, name, username));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

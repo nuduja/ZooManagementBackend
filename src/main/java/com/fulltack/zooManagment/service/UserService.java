@@ -1,10 +1,20 @@
 package com.fulltack.zooManagment.service;
 
+import com.fulltack.zooManagment.Requests.TicketRequest;
+import com.fulltack.zooManagment.Requests.UserRequest;
+import com.fulltack.zooManagment.enums.TicketStatus;
+import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.exception.TicketNotFoundException;
+import com.fulltack.zooManagment.exception.UserNotFoundException;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Primary
@@ -26,23 +37,43 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<List<User>> getAllUsers() {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    public User convertToUser(UserRequest userRequest) {
+        User user = new User();
+        user.setUserId(UUID.randomUUID().toString().split("-")[0]);
+        user.setUsername(userRequest.getUsername());
+        user.setName(userRequest.getName());
+        user.setPhone(userRequest.getPhone());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(userRequest.getPassword());
+        user.setRole(userRequest.getRole());
+        return user;
+    }
+
+    public List<User> getAllUsers() {
         try {
-            return ResponseEntity.ok(repository.findAll());
+            return repository.findAll();
         } catch (Exception e) {
-            System.out.println("Error occurred while fetching users" + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
+            throw new ServiceException("Error Occurred while fetching all Users", e);
         }
     }
 
-    public ResponseEntity<User> getUser(String username) {
+    public User getUserByUsername(String username) {
         try {
-            return ResponseEntity.ok(repository.findByUsername(username));
+            User user = repository.findByUsername(username);
+
+            if (user == null) {
+                throw new UserNotFoundException("User with username " + username + " not found");
+            }
+            return user;
         } catch (Exception e) {
             throw new ServiceException("Error occurred while fetching specific user", e);
         }
     }
 
+    //Redundant
     @Override
     public UserDetails loadUserByUsername(String username) {
         try {
@@ -54,16 +85,16 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public ResponseEntity<String> addUser(User user) {
+    public User addUser(UserRequest userRequest) {
         try {
+            User user = convertToUser(userRequest);
             if (!repository.existsByUsername(user.getUsername().trim())) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-                repository.save(user);
-                return ResponseEntity.status(HttpStatus.CREATED).body("User " + user.getUsername() + " Saved Successfully");
-            } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Username " + user.getUsername() + " Already Exists");
+                if (user.getUsername() == null || user.getPassword() == null) {
+                    throw new IllegalArgumentException("Username and Password must be valid.");
+                }
             }
-
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return repository.save(user);
         } catch (Exception e) {
             throw new ServiceException("Error occurred while adding a user", e);
         }
@@ -123,16 +154,41 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public ResponseEntity<String> deleteUser(String username) {
+    public String deleteUserByUsername(String username) {
         try {
             if (repository.existsByUsername(username)) {
                 repository.deleteByUsername(username);
-                return ResponseEntity.ok(username + " User Deleted Successfully");
+                return "User Deleted Successfully";
             } else {
-                return ResponseEntity.ok(username + " User Does not exists");
+                return "User doesn't exists";
             }
         } catch (Exception e) {
             throw new ServiceException("Error Occurred while Deleting User", e);
+        }
+    }
+
+    public List<User> searchUser(String userId, String name, String username) {
+        try {
+            Query query = new Query();
+            List<Criteria> criteria = new ArrayList<>();
+
+            if (userId != null && !userId.isEmpty()) {
+                criteria.add(Criteria.where("userId").regex(userId, "i")); // case-insensitive search
+            }
+            if (name != null && !name.isEmpty()) {
+                criteria.add(Criteria.where("name").is(name));
+            }
+            if (username != null && !username.isEmpty()) {
+                criteria.add(Criteria.where("username").is(username));
+            }
+
+            if (!criteria.isEmpty()) {
+                query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
+            }
+
+            return mongoTemplate.find(query, User.class);
+        } catch(Exception e){
+            throw new ServiceException("Error Searching User", e);
         }
     }
 }

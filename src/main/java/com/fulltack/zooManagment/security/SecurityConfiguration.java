@@ -40,14 +40,15 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/event/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/animal/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/animalspecies/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/user/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/event/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/admin/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/animal/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/animalspecies/**")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/generateToken")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/v1/ticket/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/employee/**")).permitAll()
 
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

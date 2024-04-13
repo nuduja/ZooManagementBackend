@@ -59,6 +59,14 @@ public class AnimalSpeciesServices {
         }
     }
 
+    public AnimalSpecies getAnimalSpeciesByAnimalSpeciesId(String animalSpeciesId) {
+        try {
+            return repository.findByAnimalSpeciesId(animalSpeciesId);
+        } catch (Exception e) {
+            throw new ServiceException("Error occurred while fetching specific user", e);
+        }
+    }
+
     public String addAnimalSpecies(AnimalSpeciesRequest animalSpeciesRequest) {
         try {
             AnimalSpecies animalSpecies = convertToAnimalSpecies(animalSpeciesRequest);
@@ -89,7 +97,7 @@ public class AnimalSpeciesServices {
         }
     }
 
-    public List<Ticket> searchAnimalSpecies(String animalSpeciesId, String animalSpciesName) {
+    public List<AnimalSpecies> searchAnimalSpecies(String animalSpeciesId, String animalSpciesName) {
         try {
             Query query = new Query();
             List<Criteria> criteria = new ArrayList<>();
@@ -97,7 +105,7 @@ public class AnimalSpeciesServices {
             if (animalSpeciesId != null && !animalSpeciesId.isEmpty()) {
                 criteria.add(Criteria.where("animalSpeciesId").regex(animalSpeciesId, "i")); // case-insensitive search
             }
-            if (animalSpciesName != null) {
+            if (animalSpciesName != null && !animalSpciesName.isEmpty()) {
                 criteria.add(Criteria.where("animalSpciesName").is(animalSpciesName));
             }
 
@@ -105,7 +113,7 @@ public class AnimalSpeciesServices {
                 query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
             }
 
-            return mongoTemplate.find(query, Ticket.class);
+            return mongoTemplate.find(query, AnimalSpecies.class);
         } catch(Exception e){
             throw new ServiceException("Error Searching Animal Species", e);
         }

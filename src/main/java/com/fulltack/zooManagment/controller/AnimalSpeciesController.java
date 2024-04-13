@@ -40,6 +40,17 @@ public class AnimalSpeciesController {
         }
     }
 
+    @GetMapping("/animalSpeciesId/{animalSpeciesId}")
+    public ResponseEntity<AnimalSpecies> getAnimalSpeciesByAnimalSpeciesId(@PathVariable String animalSpeciesId) {
+        try {
+            return ResponseEntity.ok(service.getAnimalSpeciesByAnimalSpeciesId(animalSpeciesId));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } catch (AnimalNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/createAnimalSpecies")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addAnimalSpecies(@RequestBody AnimalSpeciesRequest animalSpeciesRequest) {
@@ -59,8 +70,8 @@ public class AnimalSpeciesController {
         }
     }
 
-    @GetMapping("/search")
-    public List<Ticket> searchTickets(
+    @GetMapping("/searchAnimalSpecies")
+    public List<AnimalSpecies> searchTickets(
             @RequestParam(required = false) String animalSpeciesId,
             @RequestParam(required = false) String animalSpeciesName) {
         return service.searchAnimalSpecies(animalSpeciesId, animalSpeciesName);

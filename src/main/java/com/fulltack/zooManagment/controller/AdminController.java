@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -106,5 +107,11 @@ public class AdminController {
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @PutMapping("/updatebyadminid/{adminId}")
+    public String updateAdminByAdminId(@PathVariable String adminId, @RequestBody Map<String, Object> updates) {
+        service.updateAdminByAdminId(adminId, updates);
+        return "Event updated successfully";
     }
 }

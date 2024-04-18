@@ -4,16 +4,20 @@ import com.fulltack.zooManagment.Requests.AdminRequest;
 import com.fulltack.zooManagment.exception.AdminNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.Admin;
+import com.fulltack.zooManagment.model.Animal;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -128,5 +132,16 @@ public class AdminService {
         } catch (Exception e) {
             throw new ServiceException("Error Searching Ticket", e);
         }
+    }
+
+    public void updateAdminByAdminId(String adminId, Map<String, Object> updates) {
+        Query query = new Query(Criteria.where("adminId").is(adminId));
+        Update update = new Update();
+        updates.forEach((key, value) -> {
+            if (!key.equals("id") && !key.equals("adminId")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.findAndModify(query, update, Admin.class);
     }
 }

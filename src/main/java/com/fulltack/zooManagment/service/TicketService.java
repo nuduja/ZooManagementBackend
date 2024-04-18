@@ -1,6 +1,6 @@
 package com.fulltack.zooManagment.service;
 
-import com.fulltack.zooManagment.requests.TicketRequest;
+import com.fulltack.zooManagment.Requests.TicketRequest;
 import com.fulltack.zooManagment.enums.TicketStatus;
 import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.exception.ServiceException;
@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -133,5 +135,15 @@ public class TicketService {
         } catch(Exception e){
             throw new ServiceException("Error fetching Ticket", e);
         }
+    }
+    public void updateTicketByTicketId(String ticketID, Map<String, Object> updates) {
+        Query query = new Query(Criteria.where("ticketID").is(ticketID));
+        Update update = new Update();
+        updates.forEach((key, value) -> {
+            if (!key.equals("id") && !key.equals("ticketID")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.findAndModify(query, update, Ticket.class);
     }
 }

@@ -1,6 +1,6 @@
 package com.fulltack.zooManagment.security;
 
-import com.fulltack.zooManagment.auth.JwtAuthFilter;
+//import com.fulltack.zooManagment.auth.JwtAuthFilter;
 import com.fulltack.zooManagment.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration {
 
     @Autowired
-    private JwtAuthFilter authFilter;
+//    private JwtAuthFilter authFilter;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -52,8 +52,8 @@ public class SecurityConfiguration {
 
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider());
+//                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

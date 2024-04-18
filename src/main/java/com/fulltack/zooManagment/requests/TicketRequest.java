@@ -1,4 +1,4 @@
-package com.fulltack.zooManagment.requests;
+package com.fulltack.zooManagment.Requests;
 
 import com.fulltack.zooManagment.enums.TicketStatus;
 import com.fulltack.zooManagment.enums.TicketType;

@@ -83,7 +83,7 @@ public class AnimalController {
     }
 
     @GetMapping("/searchAnimal")
-    public List<Animal> searchTickets(
+    public List<Animal> searchAnimals(
             @RequestParam(required = false) String animalId,
             @RequestParam(required = false) String animalSpeciesId,
             @RequestParam(required = false) String name) {

@@ -114,6 +114,6 @@ public class UserController {
     @PutMapping("/updatebyuserid/{userId}")
     public String updateUserByUserId(@PathVariable String userId, @RequestBody Map<String, Object> updates) {
         service.updateUserByUserId(userId, updates);
-        return "Event updated successfully";
+        return "User updated successfully";
     }
 }

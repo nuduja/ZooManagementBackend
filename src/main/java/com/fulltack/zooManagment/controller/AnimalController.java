@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/animal")
@@ -87,5 +88,11 @@ public class AnimalController {
             @RequestParam(required = false) String animalSpeciesId,
             @RequestParam(required = false) String name) {
         return service.searchAnimals(animalId, animalSpeciesId, name);
+    }
+
+    @PutMapping("/updatebyadnimalid/{animalId}")
+    public String updateEventByEventId(@PathVariable String animalId, @RequestBody Map<String, Object> updates) {
+        service.updateAnimalByAnimalId(animalId, updates);
+        return "Ticket updated successfully";
     }
 }

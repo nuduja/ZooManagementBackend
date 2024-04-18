@@ -4,15 +4,18 @@ import com.fulltack.zooManagment.Requests.AnimalRequest;
 import com.fulltack.zooManagment.exception.AnimalNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.Animal;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -134,5 +137,16 @@ public class AnimalService {
         } catch (Exception e) {
             throw new ServiceException("Error Searching Animal", e);
         }
+    }
+
+    public void updateAnimalByAnimalId(String animalId, Map<String, Object> updates) {
+        Query query = new Query(Criteria.where("animalId").is(animalId));
+        Update update = new Update();
+        updates.forEach((key, value) -> {
+            if (!key.equals("id") && !key.equals("animalId")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.findAndModify(query, update, Animal.class);
     }
 }

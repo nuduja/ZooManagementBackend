@@ -112,6 +112,6 @@ public class AdminController {
     @PutMapping("/updatebyadminid/{adminId}")
     public String updateAdminByAdminId(@PathVariable String adminId, @RequestBody Map<String, Object> updates) {
         service.updateAdminByAdminId(adminId, updates);
-        return "Event updated successfully";
+        return "Admin updated successfully";
     }
 }

@@ -180,7 +180,7 @@ public class UserService implements UserDetailsService {
             }
 
             return mongoTemplate.find(query, User.class);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error Searching User", e);
         }
     }

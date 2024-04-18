@@ -108,7 +108,7 @@ public class AnimalSpeciesServices {
             }
 
             return mongoTemplate.find(query, AnimalSpecies.class);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error Searching Animal Species", e);
         }
     }

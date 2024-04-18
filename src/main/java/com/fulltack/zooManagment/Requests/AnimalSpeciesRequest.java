@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
-
 @Data
 @AllArgsConstructor
 public class AnimalSpeciesRequest {

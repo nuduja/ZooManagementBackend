@@ -24,7 +24,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfiguration {
+public class    SecurityConfiguration {
 
     @Autowired
 //    private JwtAuthFilter authFilter;

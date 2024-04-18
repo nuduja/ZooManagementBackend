@@ -60,9 +60,9 @@ public class AnimalService {
     }
 
     public List<Animal> getAnimalsBySpeciesId(String animalSpeciesId) {
-        try{
+        try {
             return repository.findByAnimalSpeciesId(animalSpeciesId);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error Occurred while fetching all Animals", e);
         }
     }
@@ -131,7 +131,7 @@ public class AnimalService {
             }
 
             return mongoTemplate.find(query, Animal.class);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error Searching Animal", e);
         }
     }

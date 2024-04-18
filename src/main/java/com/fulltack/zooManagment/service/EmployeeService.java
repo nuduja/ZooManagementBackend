@@ -119,7 +119,7 @@ public class EmployeeService {
             }
 
             return mongoTemplate.find(query, Employee.class);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new ServiceException("Error Searching Employee", e);
         }
     }

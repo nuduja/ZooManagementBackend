@@ -93,6 +93,6 @@ public class AnimalController {
     @PutMapping("/updatebyadnimalid/{animalId}")
     public String updateEventByEventId(@PathVariable String animalId, @RequestBody Map<String, Object> updates) {
         service.updateAnimalByAnimalId(animalId, updates);
-        return "Ticket updated successfully";
+        return "Animal updated successfully";
     }
 }

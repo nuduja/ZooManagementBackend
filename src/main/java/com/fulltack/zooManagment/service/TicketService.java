@@ -1,6 +1,6 @@
 package com.fulltack.zooManagment.service;
 
-import com.fulltack.zooManagment.requests.TicketRequest;
+import com.fulltack.zooManagment.Requests.TicketRequest;
 import com.fulltack.zooManagment.enums.TicketStatus;
 import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.exception.ServiceException;

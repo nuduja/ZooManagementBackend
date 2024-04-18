@@ -3,6 +3,7 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.Requests.UserRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.exception.UserNotFoundException;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +11,14 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Primary
@@ -183,5 +182,16 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             throw new ServiceException("Error Searching User", e);
         }
+    }
+
+    public void updateUserByUserId(String userId, Map<String, Object> updates) {
+        Query query = new Query(Criteria.where("userId").is(userId));
+        Update update = new Update();
+        updates.forEach((key, value) -> {
+            if (!key.equals("id") && !key.equals("userId")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.findAndModify(query, update, User.class);
     }
 }

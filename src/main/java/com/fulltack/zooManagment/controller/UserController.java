@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -108,5 +109,11 @@ public class UserController {
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @PutMapping("/updatebyuserid/{userId}")
+    public String updateUserByUserId(@PathVariable String userId, @RequestBody Map<String, Object> updates) {
+        service.updateUserByUserId(userId, updates);
+        return "Event updated successfully";
     }
 }

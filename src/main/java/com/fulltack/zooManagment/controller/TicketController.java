@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/ticket")
@@ -84,5 +85,10 @@ public class TicketController {
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+    @PutMapping("/updatebyticketid/{ticketID}")
+    public String updateEventByEventId(@PathVariable String ticketID, @RequestBody Map<String, Object> updates) {
+        service.updateTicketByTicketId(ticketID, updates);
+        return "Ticket updated successfully";
     }
 }

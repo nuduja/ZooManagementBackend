@@ -77,6 +77,6 @@ public class AnimalSpeciesController {
     @PutMapping("/updatebyanimalspeciesid/{animalSpeciesId}")
     public String updateAnimalSpeciesIdByAnimalSpeciesId(@PathVariable String animalSpeciesId, @RequestBody Map<String, Object> updates) {
         service.updateAnimalSpeciesIdByAnimalSpeciesId(animalSpeciesId, updates);
-        return "Ticket updated successfully";
+        return "AnimalSpecies updated successfully";
     }
 }

@@ -124,6 +124,6 @@ public class AnimalSpeciesServices {
                 update.set(key, value);
             }
         });
-        mongoTemplate.findAndModify(query, update, Animal.class);
+        mongoTemplate.findAndModify(query, update, AnimalSpecies.class);
     }
 }

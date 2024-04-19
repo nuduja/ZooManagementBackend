@@ -3,7 +3,7 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.Requests.UserRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.exception.UserNotFoundException;
-import com.fulltack.zooManagment.model.Ticket;
+import com.fulltack.zooManagment.generators.PDFGeneratorService;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 @Service
@@ -25,6 +26,9 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -97,22 +101,6 @@ public class UserService implements UserDetailsService {
     @Transactional
     public String updateUser(User userRequest) {
         try {
-//            if (repository.existsByUsername(userRequest.getUsername())) {
-//                User existingUser = repository.findByUsername(userRequest.getUsername());
-//                if(userRequest.getEmail() != null) {
-//                    existingUser.setEmail(userRequest.getEmail());
-//
-//                }
-//                if(userRequest.getPassword() != null) {
-//                    existingUser.setPassword(userRequest.getPassword());
-//                }
-//                if(userRequest.getPhone() != null) {
-//                    existingUser.setPhone(userRequest.getPhone());
-//                }
-//                if(userRequest.getName() != null) {
-//                    existingUser.setName(userRequest.getName());
-//                }
-//                return "User " + userRequest.getUsername() + " Updated successfully";
             Optional<User> existingUserOptional = Optional.ofNullable(repository.findByUsername(userRequest.getUsername()));
             if (existingUserOptional.isPresent()) {
                 User existingUser = existingUserOptional.get();
@@ -193,5 +181,10 @@ public class UserService implements UserDetailsService {
             }
         });
         mongoTemplate.findAndModify(query, update, User.class);
+    }
+
+    public ByteArrayInputStream generateUserPDF() {
+        List<User> users = repository.findAll();
+        return pdfGeneratorService.userReport(users);
     }
 }

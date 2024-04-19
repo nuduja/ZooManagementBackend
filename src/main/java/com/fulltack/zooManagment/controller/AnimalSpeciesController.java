@@ -1,16 +1,19 @@
 package com.fulltack.zooManagment.controller;
 
 import com.fulltack.zooManagment.Requests.AnimalSpeciesRequest;
-import com.fulltack.zooManagment.Requests.EventManagerUpdateDTO;
 import com.fulltack.zooManagment.exception.AnimalNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.AnimalSpecies;
 import com.fulltack.zooManagment.service.AnimalSpeciesServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -78,5 +81,19 @@ public class AnimalSpeciesController {
     public String updateAnimalSpeciesIdByAnimalSpeciesId(@PathVariable String animalSpeciesId, @RequestBody Map<String, Object> updates) {
         service.updateAnimalSpeciesIdByAnimalSpeciesId(animalSpeciesId, updates);
         return "AnimalSpecies updated successfully";
+    }
+
+    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> ticketsReport() {
+        ByteArrayInputStream bis = service.generateAnimalSpeciesPDF();
+
+        var headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=animalSpecies.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 }

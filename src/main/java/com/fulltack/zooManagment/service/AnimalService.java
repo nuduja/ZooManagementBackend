@@ -3,8 +3,8 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.Requests.AnimalRequest;
 import com.fulltack.zooManagment.exception.AnimalNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.generators.PDFGeneratorService;
 import com.fulltack.zooManagment.model.Animal;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,9 @@ public class AnimalService {
 
     @Autowired
     private AnimalRepository repository;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -44,7 +48,7 @@ public class AnimalService {
         try {
             return repository.findAll();
         } catch (Exception e) {
-            throw new ServiceException("Error Occurred while fetching all Tickets", e);
+            throw new ServiceException("Error Occurred while fetching all Animals", e);
         }
     }
 
@@ -83,24 +87,6 @@ public class AnimalService {
         }
     }
 
-    //TODO: DO
-//    public String updateAnimal(Ticket ticket){
-//        try{
-//            if(repository.existsByAnimalID(ticket.getAnimalID())){
-//                Ticket existingTicket = repository.findById(ticket.getId()).get();
-//                existingTicket.setTicketType(ticket.getTicketType());
-//                existingTicket.setPrice(ticket.getPrice());
-//
-//                return ticket.getTicketID() + " Ticket Updated Successful";
-//            }
-//            else{
-//                return ticket.getTicketID() + " Ticket Updating Unsuccessful";
-//            }
-//        } catch(Exception e){
-//            throw new ServiceException("Error Updating Ticket", e);
-//        }
-//    }
-
     public String deleteAnimalByName(String name) {
         try {
             if (repository.existsByName(name)) {
@@ -120,7 +106,7 @@ public class AnimalService {
             List<Criteria> criteria = new ArrayList<>();
 
             if (animalId != null && !animalId.isEmpty()) {
-                criteria.add(Criteria.where("animalId").regex(animalId, "i")); // case-insensitive search
+                criteria.add(Criteria.where("animalId").regex(animalId, "i"));
             }
             if (animalSpeciesId != null && !animalSpeciesId.isEmpty()) {
                 criteria.add(Criteria.where("animalId").is(animalId));
@@ -148,5 +134,10 @@ public class AnimalService {
             }
         });
         mongoTemplate.findAndModify(query, update, Animal.class);
+    }
+
+    public ByteArrayInputStream generateAnimalsPDF() {
+        List<Animal> animals = repository.findAll();
+        return pdfGeneratorService.animalReport(animals);
     }
 }

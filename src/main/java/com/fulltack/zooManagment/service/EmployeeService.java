@@ -3,8 +3,8 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.Requests.EmployeeRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.exception.TicketNotFoundException;
+import com.fulltack.zooManagment.generators.PDFGeneratorService;
 import com.fulltack.zooManagment.model.Employee;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,9 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository repository;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -70,22 +74,6 @@ public class EmployeeService {
             throw new ServiceException("Error occurred while adding an employee", e);
         }
     }
-
-//    public String updateEmployee(String id, EmployeeRequest employeeRequest) {
-//        try {
-//            Employee employee = repository.findById(id)
-//            employee.setName(employeeRequest.getName());
-//            employee.setNic(employeeRequest.getNic());
-//            employee.setAddress(employeeRequest.getAddress());
-//            employee.setPhone(employeeRequest.getPhone());
-//            employee.setPosition(employeeRequest.getPosition());
-//            employee.setDob(employeeRequest.getDob());
-//            repository.save(employee);
-//            return "Employee Updated Successfully";
-//        } catch (Exception e) {
-//            throw new ServiceException("Error occurred while updating an employee", e);
-//        }
-//    }
 
     public String deleteEmployeeById(String id) {
         try {
@@ -136,5 +124,10 @@ public class EmployeeService {
             }
         });
         mongoTemplate.findAndModify(query, update, Employee.class);
+    }
+
+    public ByteArrayInputStream generateEmployeesPDF() {
+        List<Employee> employees = repository.findAll();
+        return pdfGeneratorService.employeeReport(employees);
     }
 }

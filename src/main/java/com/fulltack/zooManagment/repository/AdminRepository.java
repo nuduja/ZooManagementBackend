@@ -7,6 +7,8 @@ public interface AdminRepository extends MongoRepository<Admin, String> {
 
     Admin findByUsername(String username);
 
+    Admin findByAdminId(String adminId);
+
     boolean existsByUsername(String username);
 
     String deleteByUsername(String username);

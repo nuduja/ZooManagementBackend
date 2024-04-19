@@ -49,16 +49,16 @@ public class AdminService {
         try {
             return repository.findAll();
         } catch (Exception e) {
-            throw new ServiceException("Error Occurred while fetching all Tickets", e);
+            throw new ServiceException("Error Occurred while fetching all Admin", e);
         }
     }
 
-    public Admin getAdminByUsername(String username) {
+    public Admin getAdminByAdminId(String adminId) {
         try {
-            Admin admin = repository.findByUsername(username);
+            Admin admin = repository.findByAdminId(adminId);
 
             if (admin == null) {
-                throw new AdminNotFoundException("Ticket with ID " + username + " not found");
+                throw new AdminNotFoundException("Amin with ID " + adminId + " not found");
             }
             return admin;
         } catch (Exception e) {
@@ -133,7 +133,7 @@ public class AdminService {
 
             return mongoTemplate.find(query, Admin.class);
         } catch (Exception e) {
-            throw new ServiceException("Error Searching Ticket", e);
+            throw new ServiceException("Error Searching Admin", e);
         }
     }
 

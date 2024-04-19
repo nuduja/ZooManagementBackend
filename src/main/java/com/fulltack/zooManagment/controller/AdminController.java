@@ -49,9 +49,9 @@ public class AdminController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<Admin> getAdminByUsername(@PathVariable String username) {
+    public ResponseEntity<Admin> getAdminByAdminId(@PathVariable String adminId) {
         try {
-            return ResponseEntity.ok(service.getAdminByUsername(username));
+            return ResponseEntity.ok(service.getAdminByAdminId(adminId));
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         } catch (AdminNotFoundException e) {

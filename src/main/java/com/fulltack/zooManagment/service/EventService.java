@@ -143,4 +143,5 @@ public class EventService {
                     repository.save(event);
                 });
     }
+
 }

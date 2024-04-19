@@ -99,10 +99,10 @@ public class AdminService {
         }
     }
 
-    public String deleteAdmin(String username) {
+    public String deleteAdminByAdminId(String adminId) {
         try {
-            if (repository.existsByUsername(username)) {
-                repository.deleteByUsername(username);
+            if (repository.existsByAdminId(adminId)) {
+                repository.deleteByAdminId(adminId);
                 return "Admin Deleted Successfully";
             } else {
                 return "Admin doesn't exists";

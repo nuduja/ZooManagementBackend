@@ -9,7 +9,11 @@ public interface AdminRepository extends MongoRepository<Admin, String> {
 
     Admin findByAdminId(String adminId);
 
+    boolean existsByAdminId(String adminId);
+
     boolean existsByUsername(String username);
+
+    String deleteByAdminId(String adminId);
 
     String deleteByUsername(String username);
 }

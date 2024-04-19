@@ -48,7 +48,7 @@ public class AdminController {
         return ResponseEntity.ok(service.getAllAdmins());
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/{adminId}")
     public ResponseEntity<Admin> getAdminByAdminId(@PathVariable String adminId) {
         try {
             return ResponseEntity.ok(service.getAdminByAdminId(adminId));
@@ -88,10 +88,10 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteAdmin(@PathVariable String username) {
+    @DeleteMapping("/{adminId}")
+    public ResponseEntity<String> deleteAdminByAdminId(@PathVariable String adminId) {
         try {
-            return ResponseEntity.ok(service.deleteAdmin(username));
+            return ResponseEntity.ok(service.deleteAdminByAdminId(adminId));
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

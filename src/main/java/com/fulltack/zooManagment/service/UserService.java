@@ -85,7 +85,7 @@ public class UserService implements UserDetailsService {
         try {
             User user = convertToUser(userRequest);
             if (!repository.existsByUsername(user.getUsername().trim())) {
-                if (user.getUsername() == null || user.getPassword() == null) {
+                if (user.getUsername() == null || user.getPassword() == null || user.getUserId() == null) {
                     throw new IllegalArgumentException("Username and Password must be valid.");
                 }
             }

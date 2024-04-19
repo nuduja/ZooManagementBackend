@@ -6,10 +6,14 @@ import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.Animal;
 import com.fulltack.zooManagment.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -53,16 +57,6 @@ public class AnimalController {
         }
     }
 
-    //TODO:Do
-//    @PutMapping
-//    public ResponseEntity<String> updateTicket(@RequestBody AnimalRequest animalRequest) {
-//        try {
-//            return ResponseEntity.ok(service.updateAnimal(animalRequest));
-//        } catch (ServiceException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
-
     @PostMapping("/createAnimal")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addAnimal(@RequestBody AnimalRequest animalRequest) {
@@ -94,5 +88,19 @@ public class AnimalController {
     public String updateEventByEventId(@PathVariable String animalId, @RequestBody Map<String, Object> updates) {
         service.updateAnimalByAnimalId(animalId, updates);
         return "Animal updated successfully";
+    }
+
+    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> ticketsReport() {
+        ByteArrayInputStream bis = service.generateAnimalsPDF();
+
+        var headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=animals.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 }

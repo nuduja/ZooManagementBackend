@@ -83,12 +83,6 @@ public class UserController {
         }
     }
 
-
-    @PutMapping
-    public String updateUser(@RequestBody User user) {
-        return service.updateUser(user);
-    }
-
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
         try {

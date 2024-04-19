@@ -2,8 +2,8 @@ package com.fulltack.zooManagment.service;
 
 import com.fulltack.zooManagment.Requests.AnimalSpeciesRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.generators.PDFGeneratorService;
 import com.fulltack.zooManagment.model.AnimalSpecies;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AnimalSpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,9 @@ import java.util.UUID;
 public class AnimalSpeciesServices {
     @Autowired
     private AnimalSpeciesRepository repository;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -44,7 +48,7 @@ public class AnimalSpeciesServices {
         try {
             return repository.findAll();
         } catch (Exception e) {
-            throw new ServiceException("Error Occurred while fetching all Tickets", e);
+            throw new ServiceException("Error Occurred while fetching all Animal Species", e);
         }
     }
 
@@ -52,7 +56,7 @@ public class AnimalSpeciesServices {
         try {
             return repository.findByAnimalSpeciesName(name);
         } catch (Exception e) {
-            throw new ServiceException("Error occurred while fetching specific user", e);
+            throw new ServiceException("Error occurred while fetching specific Animal Species", e);
         }
     }
 
@@ -60,7 +64,7 @@ public class AnimalSpeciesServices {
         try {
             return repository.findByAnimalSpeciesId(animalSpeciesId);
         } catch (Exception e) {
-            throw new ServiceException("Error occurred while fetching specific user", e);
+            throw new ServiceException("Error occurred while fetching specific Animal Species", e);
         }
     }
 
@@ -77,7 +81,7 @@ public class AnimalSpeciesServices {
                 return "Username " + animalSpecies.getAnimalSpeciesName() + " Already Exists";
             }
         } catch (Exception e) {
-            throw new ServiceException("Error occurred while adding an animalSpecies", e);
+            throw new ServiceException("Error occurred while adding an Animal Species", e);
         }
     }
 
@@ -90,7 +94,7 @@ public class AnimalSpeciesServices {
                 return "AnimalSpecies Does not exists";
             }
         } catch (Exception e) {
-            throw new ServiceException("Error Occurred while Deleting AnimalSpecies", e);
+            throw new ServiceException("Error Occurred while Deleting Animal Species", e);
         }
     }
 
@@ -100,7 +104,7 @@ public class AnimalSpeciesServices {
             List<Criteria> criteria = new ArrayList<>();
 
             if (animalSpeciesId != null && !animalSpeciesId.isEmpty()) {
-                criteria.add(Criteria.where("animalSpeciesId").regex(animalSpeciesId, "i")); // case-insensitive search
+                criteria.add(Criteria.where("animalSpeciesId").regex(animalSpeciesId, "i"));
             }
             if (animalSpciesName != null && !animalSpciesName.isEmpty()) {
                 criteria.add(Criteria.where("animalSpciesName").is(animalSpciesName));
@@ -125,5 +129,10 @@ public class AnimalSpeciesServices {
             }
         });
         mongoTemplate.findAndModify(query, update, AnimalSpecies.class);
+    }
+
+    public ByteArrayInputStream generateAnimalSpeciesPDF() {
+        List<AnimalSpecies> animalSpecies = repository.findAll();
+        return pdfGeneratorService.animalSpeciesReport(animalSpecies);
     }
 }

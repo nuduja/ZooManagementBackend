@@ -8,7 +8,10 @@ import com.fulltack.zooManagment.model.LoginDTO;
 import com.fulltack.zooManagment.model.User;
 import com.fulltack.zooManagment.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +68,6 @@ public class UserController {
         }
     }
 
-    //API Call not in use
     @PostMapping("/login")
     public boolean login(@RequestBody LoginDTO loginDTO) {
         return service.login(loginDTO.getUsername(), loginDTO.getPassword());
@@ -72,12 +75,8 @@ public class UserController {
 
     @PostMapping("/generateToken")
     public ResponseEntity<String> authenticateAndGetToken(@RequestBody LoginDTO loginDTO) {
-//    public ResponseEntity<Map<String, String>> authenticateAndGetToken(@RequestBody LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
         if (authentication.isAuthenticated()) {
-//            Map<String, String> response = new HashMap<>();
-//            response.put("token", jwtService.generateToken(loginDTO.getUsername()));
-//            return ResponseEntity.ok(response);
             return ResponseEntity.ok(jwtService.generateToken(loginDTO.getUsername()));
         } else {
             throw new UsernameNotFoundException("invalid user request !");
@@ -115,5 +114,19 @@ public class UserController {
     public String updateUserByUserId(@PathVariable String userId, @RequestBody Map<String, Object> updates) {
         service.updateUserByUserId(userId, updates);
         return "User updated successfully";
+    }
+
+    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> ticketsReport() {
+        ByteArrayInputStream bis = service.generateUserPDF();
+
+        var headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=users.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
     }
 }

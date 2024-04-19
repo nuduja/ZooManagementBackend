@@ -3,9 +3,8 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.Requests.AdminRequest;
 import com.fulltack.zooManagment.exception.AdminNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.generators.PDFGeneratorService;
 import com.fulltack.zooManagment.model.Admin;
-import com.fulltack.zooManagment.model.Animal;
-import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +25,9 @@ public class AdminService {
 
     @Autowired
     private AdminRepository repository;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -143,5 +146,10 @@ public class AdminService {
             }
         });
         mongoTemplate.findAndModify(query, update, Admin.class);
+    }
+
+    public ByteArrayInputStream generateAdminsPDF() {
+        List<Admin> admins = repository.findAll();
+        return pdfGeneratorService.adminReport(admins);
     }
 }

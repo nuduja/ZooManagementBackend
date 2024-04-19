@@ -113,7 +113,7 @@ public class UserController {
     @PutMapping("/updatebyuserid/{userId}")
     public String updateUserByUserId(@PathVariable String userId, @RequestBody Map<String, Object> updates) {
         service.updateUserByUserId(userId, updates);
-        return "User updated successfully";
+        return "Customer Data updated successfully";
     }
 
     @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)

@@ -89,4 +89,5 @@ public class EventController {
         service.updateEventManager(updateDTO.getEventID(), updateDTO.getEventManager());
         return "Event manager updated successfully";
     }
+
 }

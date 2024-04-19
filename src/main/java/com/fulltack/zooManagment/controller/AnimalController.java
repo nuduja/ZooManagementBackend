@@ -84,10 +84,10 @@ public class AnimalController {
         return service.searchAnimals(animalId, animalSpeciesId, name);
     }
 
-    @PutMapping("/updatebyadnimalid/{animalId}")
-    public String updateEventByEventId(@PathVariable String animalId, @RequestBody Map<String, Object> updates) {
+    @PutMapping("/updatebyanimalid/{animalId}")
+    public String updateAnimalByAnimalId(@PathVariable String animalId, @RequestBody Map<String, Object> updates) {
         service.updateAnimalByAnimalId(animalId, updates);
-        return "Animal updated successfully";
+        return "Animal Details updated successfully";
     }
 
     @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)

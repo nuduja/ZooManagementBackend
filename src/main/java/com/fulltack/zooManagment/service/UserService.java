@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -93,30 +93,6 @@ public class UserService implements UserDetailsService {
             return repository.save(user);
         } catch (Exception e) {
             throw new ServiceException("Error occurred while adding a user", e);
-        }
-    }
-
-    //TODO: Not Updating
-    //TODO: Remove Password updaing in update profile and introduce another
-    @Transactional
-    public String updateUser(User userRequest) {
-        try {
-            Optional<User> existingUserOptional = Optional.ofNullable(repository.findByUsername(userRequest.getUsername()));
-            if (existingUserOptional.isPresent()) {
-                User existingUser = existingUserOptional.get();
-
-                Optional.ofNullable(userRequest.getEmail()).ifPresent(existingUser::setEmail);
-                Optional.ofNullable(userRequest.getPassword()).ifPresent(existingUser::setPassword);
-                Optional.ofNullable(userRequest.getPhone()).ifPresent(existingUser::setPhone);
-                Optional.ofNullable(userRequest.getName()).ifPresent(existingUser::setName);
-
-                repository.save(existingUser);
-                return "User " + userRequest.getUsername() + " Updated successfully";
-            } else {
-                return "User " + userRequest.getUsername() + " Does not Exist";
-            }
-        } catch (Exception e) {
-            throw new ServiceException("Error occurred while updating a user", e);
         }
     }
 

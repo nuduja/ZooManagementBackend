@@ -29,10 +29,10 @@ public class AnimalController {
         return ResponseEntity.ok(service.getAllAnimals());
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<Animal> getAnimal(@PathVariable String name) {
+    @GetMapping("/{animalId}")
+    public ResponseEntity<Animal> getAnimalByAnimalId(@PathVariable String animalId) {
         try {
-            return ResponseEntity.ok(service.getAnimalByName(name));
+            return ResponseEntity.ok(service.getAnimalByAnimalId(animalId));
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         } catch (AnimalNotFoundException e) {
@@ -67,10 +67,10 @@ public class AnimalController {
         }
     }
 
-    @DeleteMapping("/{name}")
-    public ResponseEntity<String> deleteAnimalByName(@PathVariable String name) {
+    @DeleteMapping("/{animalId}")
+    public ResponseEntity<String> deleteAnimalByAnimalId(@PathVariable String animalId) {
         try {
-            return ResponseEntity.ok(service.deleteAnimalByName(name));
+            return ResponseEntity.ok(service.deleteAnimalByAnimalId(animalId));
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

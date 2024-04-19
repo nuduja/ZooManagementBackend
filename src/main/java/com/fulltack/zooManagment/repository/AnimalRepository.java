@@ -6,11 +6,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface AnimalRepository extends MongoRepository<Animal, String> {
-    Animal findByName(String name);
+    Animal findByAnimalId(String animalId);
 
     List<Animal> findByAnimalSpeciesId(String animalSpeciesId);
 
-    boolean existsByName(String name);
+    boolean existsByAnimalId(String animalId);
 
-    String deleteByName(String name);
+    String deleteByAnimalId(String animalId);
 }

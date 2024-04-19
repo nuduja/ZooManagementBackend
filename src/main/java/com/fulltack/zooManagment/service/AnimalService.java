@@ -52,12 +52,12 @@ public class AnimalService {
         }
     }
 
-    public Animal getAnimalByName(String name) {
+    public Animal getAnimalByAnimalId(String animalId) {
         try {
-            Animal animal = repository.findByName(name);
+            Animal animal = repository.findByAnimalId(animalId);
 
             if (animal == null) {
-                throw new AnimalNotFoundException("Animal with ID " + name + " not found");
+                throw new AnimalNotFoundException("Animal with ID " + animalId + " not found");
             }
 
             return animal;
@@ -87,10 +87,10 @@ public class AnimalService {
         }
     }
 
-    public String deleteAnimalByName(String name) {
+    public String deleteAnimalByAnimalId(String animalId) {
         try {
-            if (repository.existsByName(name)) {
-                repository.deleteByName(name);
+            if (repository.existsByAnimalId(animalId)) {
+                repository.deleteByAnimalId(animalId);
                 return "Animal Deleted Successfully";
             } else {
                 return "Animal Does not exists";
@@ -109,7 +109,7 @@ public class AnimalService {
                 criteria.add(Criteria.where("animalId").regex(animalId, "i"));
             }
             if (animalSpeciesId != null && !animalSpeciesId.isEmpty()) {
-                criteria.add(Criteria.where("animalId").is(animalId));
+                criteria.add(Criteria.where("animalSpeciesId").is(animalSpeciesId));
             }
             if (name != null && !name.isEmpty()) {
                 criteria.add(Criteria.where("name").is(name));

@@ -5,6 +5,7 @@ import com.fulltack.zooManagment.enums.TicketStatus;
 import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.exception.TicketNotFoundException;
+import com.fulltack.zooManagment.generators.PDFGeneratorService;
 import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,9 @@ public class TicketService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     public Ticket convertToTicket(TicketRequest ticketRequest) {
         Ticket ticket = new Ticket();
@@ -110,7 +115,7 @@ public class TicketService {
             List<Criteria> criteria = new ArrayList<>();
 
             if (ticketID != null && !ticketID.isEmpty()) {
-                criteria.add(Criteria.where("ticketID").regex(ticketID, "i")); // case-insensitive search
+                criteria.add(Criteria.where("ticketID").regex(ticketID, "i"));
             }
             if (ticketType != null) {
                 criteria.add(Criteria.where("ticketType").is(ticketType));
@@ -145,5 +150,10 @@ public class TicketService {
             }
         });
         mongoTemplate.findAndModify(query, update, Ticket.class);
+    }
+
+    public ByteArrayInputStream generateTicketsPDF() {
+        List<Ticket> tickets = repository.findAll();
+        return pdfGeneratorService.ticketReport(tickets);
     }
 }

@@ -11,4 +11,8 @@ public interface AnimalSpeciesRepository extends MongoRepository<AnimalSpecies, 
     boolean existsByAnimalSpeciesName(String name);
 
     String deleteByAnimalSpeciesName(String name);
+
+    boolean existsByAnimalSpeciesId(String animalSpeciesId);
+
+    String deleteByAnimalSpeciesId(String animalSpeciesId);
 }

@@ -98,6 +98,19 @@ public class AnimalSpeciesServices {
         }
     }
 
+    public String deleteAnimalSpeciesByAnimalSpeciesId(String animalSpeciesId) {
+        try {
+            if (repository.existsByAnimalSpeciesId(animalSpeciesId)) {
+                repository.deleteByAnimalSpeciesId(animalSpeciesId);
+                return "AnimalSpecies Deleted Successfully";
+            } else {
+                return "AnimalSpecies Does not exists";
+            }
+        } catch (Exception e) {
+            throw new ServiceException("Error Occurred while Deleting Animal Species", e);
+        }
+    }
+
     public List<AnimalSpecies> searchAnimalSpecies(String animalSpeciesId, String animalSpciesName) {
         try {
             Query query = new Query();

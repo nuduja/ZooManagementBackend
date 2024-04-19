@@ -70,6 +70,15 @@ public class AnimalSpeciesController {
         }
     }
 
+    @DeleteMapping("/{animalSpeciesId}")
+    public ResponseEntity<String> deleteAnimalSpeciesByAnimalSpeciesId(@PathVariable String animalSpeciesId) {
+        try {
+            return ResponseEntity.ok(service.deleteAnimalSpeciesByAnimalSpeciesId(animalSpeciesId));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @GetMapping("/searchAnimalSpecies")
     public List<AnimalSpecies> searchTickets(
             @RequestParam(required = false) String animalSpeciesId,

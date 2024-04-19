@@ -110,10 +110,10 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public String deleteUserByUsername(String username) {
+    public String deleteUserByUserId(String userId) {
         try {
-            if (repository.existsByUsername(username)) {
-                repository.deleteByUsername(username);
+            if (repository.existsByUserId(userId)) {
+                repository.deleteByUserId(userId);
                 return "User Deleted Successfully";
             } else {
                 return "User doesn't exists";

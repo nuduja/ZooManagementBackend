@@ -83,10 +83,10 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUserByUserId(@PathVariable String userId) {
         try {
-            return ResponseEntity.ok(service.deleteUserByUsername(username));
+            return ResponseEntity.ok(service.deleteUserByUserId(userId));
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

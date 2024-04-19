@@ -128,4 +128,10 @@ public class AdminController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(bis));
     }
+
+    @GetMapping("/check-admin-username")
+    public ResponseEntity<Boolean> checkUsernameExists(@RequestParam String username) {
+        boolean exists = service.checkUsernameExists(username);
+        return ResponseEntity.ok(exists);
+    }
 }

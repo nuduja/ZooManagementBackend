@@ -152,4 +152,8 @@ public class AdminService {
         List<Admin> admins = repository.findAll();
         return pdfGeneratorService.adminReport(admins);
     }
+
+    public boolean checkUsernameExists(String username) {
+        return repository.existsByUsername(username);
+    }
 }

@@ -56,12 +56,12 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public User getUserByUsername(String username) {
+    public User getUserByUserId(String userId) {
         try {
-            User user = repository.findByUsername(username);
+            User user = repository.findByUserId(userId);
 
             if (user == null) {
-                throw new UserNotFoundException("User with username " + username + " not found");
+                throw new UserNotFoundException("User with username " + userId + " not found");
             }
             return user;
         } catch (Exception e) {

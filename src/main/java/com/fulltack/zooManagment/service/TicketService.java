@@ -16,10 +16,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
@@ -156,4 +154,23 @@ public class TicketService {
         List<Ticket> tickets = repository.findAll();
         return pdfGeneratorService.ticketReport(tickets);
     }
+
+    public Map<String, Object> getTicketStatistics() {
+        List<Ticket> allTickets = repository.findAll();
+        Map<TicketType, Long> countByType = allTickets.stream()
+                .collect(Collectors.groupingBy(Ticket::getTicketType, Collectors.counting()));
+        Map<TicketStatus, Long> countByStatus = allTickets.stream()
+                .collect(Collectors.groupingBy(Ticket::getStatus, Collectors.counting()));
+        double totalIncome = allTickets.stream()
+                .mapToDouble(Ticket::getPrice).sum();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("Total Tickets", allTickets.size());
+        stats.put("Count By Type", countByType);
+        stats.put("Count By Status", countByStatus);
+        stats.put("Total Income", totalIncome);
+
+        return stats;
+    }
+
 }

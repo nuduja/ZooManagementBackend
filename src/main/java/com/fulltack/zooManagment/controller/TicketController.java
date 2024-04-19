@@ -109,4 +109,15 @@ public class TicketController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(bis));
     }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<Map<String, Object>> getTicketStatistics() {
+        try {
+            Map<String, Object> stats = service.getTicketStatistics();
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }

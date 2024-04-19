@@ -98,7 +98,7 @@ public class AdminController {
     }
 
     @GetMapping("/searchAdmin")
-    public ResponseEntity<List<Admin>> searchTickets(
+    public ResponseEntity<List<Admin>> searchAdmin(
             @RequestParam(required = false) String adminId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String username) {

@@ -1,6 +1,7 @@
 package com.fulltack.zooManagment.controller;
 
 import com.fulltack.zooManagment.Requests.AnimalSpeciesRequest;
+import com.fulltack.zooManagment.Requests.EventManagerUpdateDTO;
 import com.fulltack.zooManagment.exception.AnimalNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.AnimalSpecies;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/animalspecies")
@@ -70,5 +72,11 @@ public class AnimalSpeciesController {
             @RequestParam(required = false) String animalSpeciesId,
             @RequestParam(required = false) String animalSpeciesName) {
         return service.searchAnimalSpecies(animalSpeciesId, animalSpeciesName);
+    }
+
+    @PutMapping("/updatebyanimalspeciesid/{animalSpeciesId}")
+    public String updateAnimalSpeciesIdByAnimalSpeciesId(@PathVariable String animalSpeciesId, @RequestBody Map<String, Object> updates) {
+        service.updateAnimalSpeciesIdByAnimalSpeciesId(animalSpeciesId, updates);
+        return "AnimalSpecies updated successfully";
     }
 }

@@ -4,15 +4,18 @@ import com.fulltack.zooManagment.Requests.EmployeeRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.exception.TicketNotFoundException;
 import com.fulltack.zooManagment.model.Employee;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -122,5 +125,16 @@ public class EmployeeService {
         } catch (Exception e) {
             throw new ServiceException("Error Searching Employee", e);
         }
+    }
+
+    public void updateEmployeeByEmployeeId(String employeeId, Map<String, Object> updates) {
+        Query query = new Query(Criteria.where("employeeId").is(employeeId));
+        Update update = new Update();
+        updates.forEach((key, value) -> {
+            if (!key.equals("id") && !key.equals("employeeId")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.findAndModify(query, update, Employee.class);
     }
 }

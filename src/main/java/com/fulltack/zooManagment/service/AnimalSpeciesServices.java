@@ -3,15 +3,18 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.Requests.AnimalSpeciesRequest;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.model.AnimalSpecies;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.AnimalSpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -111,5 +114,16 @@ public class AnimalSpeciesServices {
         } catch (Exception e) {
             throw new ServiceException("Error Searching Animal Species", e);
         }
+    }
+
+    public void updateAnimalSpeciesIdByAnimalSpeciesId(String animalSpeciesId, Map<String, Object> updates) {
+        Query query = new Query(Criteria.where("animalSpeciesId").is(animalSpeciesId));
+        Update update = new Update();
+        updates.forEach((key, value) -> {
+            if (!key.equals("id") && !key.equals("animalSpeciesId")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.findAndModify(query, update, AnimalSpecies.class);
     }
 }

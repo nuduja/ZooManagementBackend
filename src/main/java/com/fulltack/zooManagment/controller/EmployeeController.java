@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/employee")
@@ -85,5 +86,11 @@ public class EmployeeController {
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PutMapping("/updatebyemployeeid/{employeeId}")
+    public String updateEmployeeByEmployeeId(@PathVariable String employeeId, @RequestBody Map<String, Object> updates) {
+        service.updateEmployeeByEmployeeId(employeeId, updates);
+        return "Employee updated successfully";
     }
 }

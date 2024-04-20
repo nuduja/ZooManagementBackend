@@ -69,6 +69,19 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public User getUserByUsername(String username) {
+        try {
+            User user = repository.findByUsername(username);
+
+            if (user == null) {
+                throw new UserNotFoundException("User with username " + username + " not found");
+            }
+            return user;
+        } catch (Exception e) {
+            throw new ServiceException("Error occurred while fetching specific user", e);
+        }
+    }
+
     //Redundant
     @Override
     public UserDetails loadUserByUsername(String username) {

@@ -66,6 +66,19 @@ public class AdminService {
         }
     }
 
+    public Admin getAdminByUsername(String username) {
+        try {
+            Admin admin = repository.findByUsername(username);
+
+            if (admin == null) {
+                throw new AdminNotFoundException("Amin with ID " + username + " not found");
+            }
+            return admin;
+        } catch (Exception e) {
+            throw new ServiceException("Error occurred while fetching specific Admin", e);
+        }
+    }
+
     public String addAdmin(AdminRequest adminRequest) {
         try {
             Admin admin = convertToAdmin(adminRequest);

@@ -59,6 +59,17 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/getAdminByUsername/{username}")
+    public ResponseEntity<Admin> getAdminByUsername(@PathVariable String username) {
+        try {
+            return ResponseEntity.ok(service.getAdminByUsername(username));
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } catch (AdminNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addAdmin(@RequestBody AdminRequest adminRequest) {

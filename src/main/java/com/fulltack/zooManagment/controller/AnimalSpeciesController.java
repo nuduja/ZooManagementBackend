@@ -80,7 +80,7 @@ public class AnimalSpeciesController {
     }
 
     @GetMapping("/searchAnimalSpecies")
-    public List<AnimalSpecies> searchTickets(
+    public List<AnimalSpecies> searchAnimalSpecies(
             @RequestParam(required = false) String animalSpeciesId,
             @RequestParam(required = false) String animalSpeciesName) {
         return service.searchAnimalSpecies(animalSpeciesId, animalSpeciesName);

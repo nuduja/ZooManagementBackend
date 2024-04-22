@@ -109,13 +109,13 @@ public class EventService {
             List<Criteria> criteria = new ArrayList<>();
 
             if (eventID != null && !eventID.isEmpty()) {
-                criteria.add(Criteria.where("eventID").regex(eventID, "i")); // case-insensitive search
+                criteria.add(Criteria.where("eventID").regex(eventID, "i"));
             }
             if (eventLocation != null && !eventLocation.isEmpty()) {
-                criteria.add(Criteria.where("eventLocation").is(eventLocation));
+                criteria.add(Criteria.where("eventLocation").regex(eventLocation, "i"));
             }
             if (eventManager != null && !eventManager.isEmpty()) {
-                criteria.add(Criteria.where("eventManager").is(eventManager));
+                criteria.add(Criteria.where("eventManager").regex(eventManager, "i"));
             }
 
             if (!criteria.isEmpty()) {

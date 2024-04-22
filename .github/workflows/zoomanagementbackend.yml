@@ -16,14 +16,14 @@ jobs:
 
       - name: Dockerize Application
         run: |
-          docker build -t ZooManagementBackend:latest .
+          docker build -t zoomanagementbackend:latest .
           docker images
 
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Tag Docker Image
-        run: docker tag ZooManagementBackend:latest nuduja/ZooManagementBackend:latest
+        run: docker tag zoomanagementbackend:latest nuduja/zoomanagementbackend:latest
 
       - name: Push Docker Image to Docker Hub
-        run: docker push nuduja/ZooManagementBackend:latest
+        run: docker push nuduja/zoomanagementbackend:latest

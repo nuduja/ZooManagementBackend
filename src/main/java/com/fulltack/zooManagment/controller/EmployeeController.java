@@ -74,9 +74,6 @@ public class EmployeeController {
             @RequestParam(required = false) String gender) {
         try {
             List<Employee> employees = service.searchEmployees(employeeId, name, nic, position, gender);
-            if (employees.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
             return ResponseEntity.ok(employees);
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

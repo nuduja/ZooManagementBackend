@@ -131,13 +131,13 @@ public class AdminService {
             List<Criteria> criteria = new ArrayList<>();
 
             if (adminId != null && !adminId.isEmpty()) {
-                criteria.add(Criteria.where("adminId").regex(adminId, "i")); // case-insensitive search
+                criteria.add(Criteria.where("adminId").regex(adminId, "i"));
             }
             if (name != null && !name.isEmpty()) {
-                criteria.add(Criteria.where("name").is(name));
+                criteria.add(Criteria.where("name").regex(name, "i"));
             }
             if (username != null && !username.isEmpty()) {
-                criteria.add(Criteria.where("username").is(username));
+                criteria.add(Criteria.where("username").regex(username, "i"));
             }
 
             if (!criteria.isEmpty()) {

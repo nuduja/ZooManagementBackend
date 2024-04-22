@@ -120,7 +120,7 @@ public class AnimalSpeciesServices {
                 criteria.add(Criteria.where("animalSpeciesId").regex(animalSpeciesId, "i"));
             }
             if (animalSpciesName != null && !animalSpciesName.isEmpty()) {
-                criteria.add(Criteria.where("animalSpciesName").is(animalSpciesName));
+                criteria.add(Criteria.where("animalSpciesName").regex(animalSpciesName, "i"));
             }
 
             if (!criteria.isEmpty()) {

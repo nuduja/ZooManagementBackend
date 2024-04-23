@@ -31,7 +31,7 @@ public class MedicalRecordController {
         return ResponseEntity.ok(service.getAllMedicalRecords());
     }
 
-    @GetMapping("/{medicalRecordId}")
+                    @GetMapping("/{medicalRecordId}")
     public ResponseEntity<MedicalRecord> getMedicalRecordByMedicalRecordId(@PathVariable String medicalRecordId) {
         try {
             return ResponseEntity.ok(service.getMedicalRecordByMedicalRecordId(medicalRecordId));

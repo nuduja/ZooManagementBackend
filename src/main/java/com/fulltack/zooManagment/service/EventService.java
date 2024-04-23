@@ -3,16 +3,21 @@ package com.fulltack.zooManagment.service;
 import com.fulltack.zooManagment.Requests.EventRequest;
 import com.fulltack.zooManagment.exception.EventNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
+import com.fulltack.zooManagment.generators.PDFGeneratorService;
 import com.fulltack.zooManagment.model.Event;
+import com.fulltack.zooManagment.model.Ticket;
 import com.fulltack.zooManagment.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -22,6 +27,9 @@ public class EventService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     public Event convertToEvent(EventRequest eventRequest) {
         Event event = new Event();
@@ -72,8 +80,8 @@ public class EventService {
 
     public String deleteEventByEventID(String eventID) {
         try {
-            if (repository.existsById(eventID)) {
-                repository.deleteById(eventID);
+            if (repository.existsByEventID(eventID)) {
+                repository.deleteByEventID(eventID);
                 return "Event Deleted Successfully";
             } else {
                 return "Event doesn't exists";
@@ -83,39 +91,19 @@ public class EventService {
         }
     }
 
-    //TODO: DO
-    public String updateEvent(Event eventRequest) {
-        try {
-            if (repository.existsByEventID(eventRequest.getEventID())) {
-                Event existingEvent = repository.findById(eventRequest.getId()).get();
-                existingEvent.setEventName(eventRequest.getEventName());
-                existingEvent.setEventDescription(eventRequest.getEventDescription());
-                existingEvent.setEventLocation(eventRequest.getEventLocation());
-                existingEvent.setCapacity(eventRequest.getCapacity());
-
-                //return repository.save(existingEvent);
-                return eventRequest.getEventID() + " Ticket Creating Successful";
-            } else {
-                return eventRequest.getEventID() + " Ticket Creating Unsuccessful";
-            }
-        } catch (Exception e) {
-            throw new ServiceException("Error Updating Ticket", e);
-        }
-    }
-
     public List<Event> searchEvents(String eventID, String eventLocation, String eventManager) {
         try {
             Query query = new Query();
             List<Criteria> criteria = new ArrayList<>();
 
             if (eventID != null && !eventID.isEmpty()) {
-                criteria.add(Criteria.where("eventID").regex(eventID, "i")); // case-insensitive search
+                criteria.add(Criteria.where("eventID").regex(eventID, "i"));
             }
             if (eventLocation != null && !eventLocation.isEmpty()) {
-                criteria.add(Criteria.where("eventLocation").is(eventLocation));
+                criteria.add(Criteria.where("eventLocation").regex(eventLocation, "i"));
             }
             if (eventManager != null && !eventManager.isEmpty()) {
-                criteria.add(Criteria.where("eventManager").is(eventManager));
+                criteria.add(Criteria.where("eventManager").regex(eventManager, "i"));
             }
 
             if (!criteria.isEmpty()) {
@@ -142,6 +130,22 @@ public class EventService {
                     event.setEventManager(eventManager);
                     repository.save(event);
                 });
+    }
+
+    public ByteArrayInputStream generateEventsPDF() {
+        List<Event> events = repository.findAll();
+        return pdfGeneratorService.eventReport(events);
+    }
+
+    public void updateEventByEventId(String eventID, Map<String, Object> updates) {
+        Query query = new Query(Criteria.where("eventID").is(eventID));
+        Update update = new Update();
+        updates.forEach((key, value) -> {
+            if (!key.equals("id") && !key.equals("eventID")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.findAndModify(query, update, Event.class);
     }
 
 }

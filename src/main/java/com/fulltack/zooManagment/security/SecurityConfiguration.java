@@ -49,6 +49,7 @@ public class    SecurityConfiguration {
 //                        .requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/v1/ticket/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/v1/employee/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/medicalRecord/**")).permitAll()
 
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

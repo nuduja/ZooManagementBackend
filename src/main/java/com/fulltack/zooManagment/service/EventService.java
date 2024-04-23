@@ -1,6 +1,7 @@
 package com.fulltack.zooManagment.service;
 
 import com.fulltack.zooManagment.Requests.EventRequest;
+import com.fulltack.zooManagment.enums.EventStatus;
 import com.fulltack.zooManagment.exception.EventNotFoundException;
 import com.fulltack.zooManagment.exception.ServiceException;
 import com.fulltack.zooManagment.generators.PDFGeneratorService;
@@ -40,6 +41,7 @@ public class EventService {
         event.setEventLocation(eventRequest.getEventLocation());
         event.setCapacity(eventRequest.getCapacity());
         event.setEventManager("NA");
+        event.setStatus(EventStatus.NA);
         event.setUsername(eventRequest.getUsername());
         return event;
     }

@@ -1,5 +1,7 @@
 package com.fulltack.zooManagment.model;
 
+import com.fulltack.zooManagment.enums.EventStatus;
+import com.fulltack.zooManagment.enums.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +25,6 @@ public class Event {
     private String eventLocation;
     private int capacity;
     private String eventManager;
+    private EventStatus status;
     private String username;
 }

@@ -201,5 +201,32 @@ public class PDFGeneratorService {
 
         return new ByteArrayInputStream(out.toByteArray());
     }
+    public ByteArrayInputStream eventReport(List<Event> events) {
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            for (Event event : events) {
+                document.add(new Paragraph("Event ID: " + event.getEventID()));
+                document.add(new Paragraph("Event Name: " + event.getEventName()));
+                document.add(new Paragraph("Event Description: " + event.getEventDescription()));
+                document.add(new Paragraph("Event Date: " + event.getEventDate()));
+                document.add(new Paragraph("Event Location: " + event.getEventLocation()));
+                document.add(new Paragraph("Capacity: " + event.getCapacity()));
+                document.add(new Paragraph("Event Manager: " + event.getEventManager()));
+                document.add(new Paragraph("Username: " + event.getUsername()));
+                document.add(new Paragraph(" "));
+            }
+
+            document.close();
+        } catch (DocumentException ex) {
+            ex.printStackTrace();
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 
 }

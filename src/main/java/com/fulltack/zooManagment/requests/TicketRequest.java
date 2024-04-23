@@ -5,12 +5,14 @@ import com.fulltack.zooManagment.enums.TicketType;
 import com.fulltack.zooManagment.validators.ValidTicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class TicketRequest {
 
     @NotNull

@@ -90,16 +90,16 @@ public class EmployeeService {
             List<Criteria> criteria = new ArrayList<>();
 
             if (employeeId != null && !employeeId.isEmpty()) {
-                criteria.add(Criteria.where("employeeId").is(employeeId));
+                criteria.add(Criteria.where("employeeId").regex(employeeId, "i"));
             }
             if (name != null && !name.isEmpty()) {
-                criteria.add(Criteria.where("name").is(name));
+                criteria.add(Criteria.where("name").regex(name, "i"));
             }
             if (nic != null && !nic.isEmpty()) {
-                criteria.add(Criteria.where("nic").is(nic));
+                criteria.add(Criteria.where("nic").regex(nic, "i"));
             }
             if (position != null && !position.isEmpty()) {
-                criteria.add(Criteria.where("position").is(position));
+                criteria.add(Criteria.where("position").regex(position, "i"));
             }
             if (gender != null && !gender.isEmpty()) {
                 criteria.add(Criteria.where("gender").is(gender));

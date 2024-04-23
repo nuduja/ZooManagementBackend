@@ -142,13 +142,13 @@ public class UserService implements UserDetailsService {
             List<Criteria> criteria = new ArrayList<>();
 
             if (userId != null && !userId.isEmpty()) {
-                criteria.add(Criteria.where("userId").regex(userId, "i")); // case-insensitive search
+                criteria.add(Criteria.where("userId").regex(userId, "i"));
             }
             if (name != null && !name.isEmpty()) {
-                criteria.add(Criteria.where("name").is(name));
+                criteria.add(Criteria.where("name").regex(name, "i"));
             }
             if (username != null && !username.isEmpty()) {
-                criteria.add(Criteria.where("username").is(username));
+                criteria.add(Criteria.where("username").regex(username, "i"));
             }
 
             if (!criteria.isEmpty()) {
